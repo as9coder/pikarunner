@@ -4,8 +4,8 @@ var edges;
 var apple, appleImg, applesGroup;
 var score=0;
 var pokeball, pokeballImg, pokeballGroup;
-var gamestate= "play";
-var powerUp, powerScore= 6, powerUpImg;
+var gamestate= "setup";
+var powerUp, powerScore= 0, powerUpImg;
 var endPika, endPikaImg;
 var pikaTh, jumpPika;
 var reset, resetImg;
@@ -65,8 +65,8 @@ function setup() {
 function draw() {
  background("lightblue");
 
- if (backround.x < 50) {
-  backround.x = backround.width / 2;
+ if (backround.x <50) {
+  backround.x = backround.width /2;
 }
 
 if(pikachu.y>580){
@@ -75,11 +75,41 @@ if(pikachu.y>580){
 
 
 
+
+ 
+ drawSprites();
+
+ fill("red");
+ 
+
+  if(gamestate=== "end"){
+    backround.velocityX= 0;
+   
+  textSize(20);
+  fill("black");
+  text("GAME OVER, PRESS ANYWHERE ON SCREEN TO RESTART", 100, 300);
+
+  endPika.visible= true; 
+
+  if(mousePressedOver(endPika)){
+    gamestate= "play";
+    score= 0;
+    powerScore= 0;
+  }
+ 
+ }
+
+ 
+
  if(gamestate=== "play"){
 
   backround.velocityX= -(5+ 3* frameCount/400);
   endPika.visible= false;
   pikachu.visible= true; 
+  powerUp.visible= true;
+
+  text("SCORE: "+score, 700, 50);
+  text("POWER: "+ powerScore, 30, 20);
   
   if( pikachu.y> 200&& keyDown("up")){
     pikachu.velocityY= pikachu.velocityY- 8;
@@ -135,6 +165,9 @@ if(mousePressedOver(powerUp)&& powerScore>= 10){
 if(gamestate=== "mode"){
   backround.velocityX= -100;
   //pikachu.changeAnimation(pikaTh);
+
+  text("SCORE: "+score, 700, 50);
+  text("POWER: "+ powerScore, 30, 20);
   
   pikachu.velocityY= 0;
   spawnApples();
@@ -160,33 +193,26 @@ pokeballGroup.destroyEach();
   }
 }
 
-if(gamestate==="end"){
-reset.visible= true; 
+if(gamestate=== "setup"){
+  endPika.visible= false;
+  pikachu.visible= false;
+  powerUp.visible= false;
+
+  textSize(30);
+  text("INSTRUCTIONS:", 200, 100);
+  text("USE UP ARROW KEY TO JUMP PIKACHU(THE YELLOW", 10, 200);
+  text(" POKEMON). COLLECT APPLES AND AVOID POKEBALLS. ", 10, 250);
+  text("WHEN THE GAME WILL START, YOU WILL BE ABLE TO", 10, 300);
+  text(" SEE POWER AND APPLES COLLECTED. WHEN ", 10, 350);
+  text("POWER IS 10, YOU CAN PRESS THE BUTTON AT TOP", 10, 400);
+  text("(SNORLAX, WITH BIG WHITE STOMACH) TO POWERUP.", 10, 450);
+
+  if(mouseIsPressed){
+    gamestate= "play";
+  }
 }
 
- drawSprites();
 
- fill("red");
- text("SCORE: "+score, 700, 50);
-
-  if(gamestate=== "end"){
-    backround.velocityX= 0;
-   
-  textSize(20);
-  fill("black");
-  text("GAME OVER, PRESS ANYWHERE ON SCREEN TO RESTART", 100, 300);
-
-  endPika.visible= true; 
-
-  if(mousePressedOver(endPika)){
-    gamestate= "play";
-    score= 0;
-    powerScore= 0;
-  }
- 
- }
-
- text("POWER: "+ powerScore, 30, 20);
 }
 
 function spawnApples(){
